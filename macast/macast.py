@@ -387,13 +387,8 @@ class Macast(App):
                tool_select + \
                tool_settings + \
                [None] + \
-               player_settings + \
                protocol_settings + \
-               [self.menubar_icon_menuitem,
-                self.auto_check_update_menuitem,
-                self.open_config_menuitem] + \
-               platform_options + \
-               [None, self.check_update_menuitem, self.about_menuitem]
+               platform_options
 
     @notify_error('error in config file')
     def init_setting(self):
@@ -485,15 +480,16 @@ class Macast(App):
                 self.notification(_("Macast is hidden"), msg, sound=False),
             )).start()
         if self.setting_check:
-            if self.macast_update_thread is None:
-                self.macast_update_thread = threading.Thread(
-                    target=self.check_update,
-                    kwargs={
-                        'verbose': False
-                    },
-                    daemon=True,
-                    name="CHECKUPDATE_THREAD")
-                self.macast_update_thread.start()
+            pass
+            # if self.macast_update_thread is None:
+            #     self.macast_update_thread = threading.Thread(
+            #         target=self.check_update,
+            #         kwargs={
+            #             'verbose': False
+            #         },
+            #         daemon=True,
+            #         name="CHECKUPDATE_THREAD")
+            #     self.macast_update_thread.start()
         if Setting.restart_flag:
             self.menu = self.build_app_menu()
             self.set_menu(self.menu)
@@ -586,12 +582,13 @@ class Macast(App):
         self.open_directory(SETTING_DIR)
 
     def on_check_click(self, item):
-        if self.macast_update_thread is None:
-            self.macast_update_thread = threading.Thread(
-                target=self.check_update,
-                daemon=True,
-                name="CHECKUPDATE_THREAD")
-            self.macast_update_thread.start()
+        pass
+        # if self.macast_update_thread is None:
+        #     self.macast_update_thread = threading.Thread(
+        #         target=self.check_update,
+        #         daemon=True,
+        #         name="CHECKUPDATE_THREAD")
+        #     self.macast_update_thread.start()
 
     def on_auto_check_update_click(self, item):
         item.checked = not item.checked

@@ -132,4 +132,6 @@ bin
 mpv-latest.tar.gz
 /.idea/.gitignore
 .idea
+/.idea/.gitignore
+.idea
 /.idea
