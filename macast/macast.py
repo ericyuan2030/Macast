@@ -387,8 +387,7 @@ class Macast(App):
                tool_select + \
                tool_settings + \
                [None] + \
-               protocol_settings + \
-               platform_options
+               protocol_settings
 
     @notify_error('error in config file')
     def init_setting(self):
