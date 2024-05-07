@@ -19,7 +19,7 @@ OPTIONS = {
         'LSUIElement': True,
         'NSHighResolutionCapable': True,
         'LSMinimumSystemVersion': '10.12.0',
-        'CFBundleIdentifier': 'com.sina.SinaCast',
+        'CFBundleIdentifier': 'com.sina.Sinacast',
         'NSHumanReadableCopyright': copyright,
         'CFBundleShortVersionString': __version__,
         'CFBundleVersion': __version__,
