@@ -159,9 +159,9 @@ jobs:
           $BUILD_OTHERS=("--additional-hooks-dir=.","--icon=macast\assets\icon.ico","--runtime-tmpdir=%Temp%\Macast", "--upx-exclude=mpv.exe")
           $BUILD_COMMON=($BUILD_LANG+$BUILD_ASSETS_1+$BUILD_ASSETS_2+$BUILD_HIDDEN_IMPORT+$BUILD_OTHERS)
           pyinstaller --noconfirm -F -w  $BUILD_COMMON --splash=macast\assets\macast_splash.jpg Sinacast.py
-          cp dist\Macast.exe $DIST_EXE
+          cp dist\Sinacast.exe $DIST_EXE
           pyinstaller --noconfirm -F -d=all $BUILD_COMMON Sinacast.py
-          cp dist\Macast.exe $DIST_EXE_DEBUG
+          cp dist\Sinacast.exe $DIST_EXE_DEBUG
           echo "::set-output name=status::success"
 
       - name: Upload dist
