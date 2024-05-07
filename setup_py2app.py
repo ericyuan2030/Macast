@@ -12,14 +12,14 @@ from setuptools import setup
 APP = ['Macast.py']
 DATA_FILES = []
 exec(open('macast/__pkginfo__.py').read())
-copyright = 'Copyright {} xfangfang and the Macast contributors.'.format(datetime.datetime.now().year)
+copyright = 'Copyright {} sina and the SinaCast contributors.'.format(datetime.datetime.now().year)
 OPTIONS = {
     'argv_emulation': True,
     'plist': {
         'LSUIElement': True,
         'NSHighResolutionCapable': True,
         'LSMinimumSystemVersion': '10.12.0',
-        'CFBundleIdentifier': 'cn.xfangfang.Macast',
+        'CFBundleIdentifier': 'com.sina.SinaCast',
         'NSHumanReadableCopyright': copyright,
         'CFBundleShortVersionString': __version__,
         'CFBundleVersion': __version__,

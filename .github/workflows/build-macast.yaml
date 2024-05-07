@@ -24,88 +24,31 @@ on:
         default: 'false'
 
 jobs:
-  version:
+  release:
+    needs: [ build-nt, build-darwin]
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.info.outputs.version }}
-      standard_version: ${{ steps.info.outputs.standard_version }}
-      DIST_DMG: ${{ steps.info.outputs.DIST_DMG }}
-      DIST_DMG_ARM: ${{ steps.info.outputs.DIST_DMG_ARM }}
-      DIST_EXE: ${{ steps.info.outputs.DIST_EXE }}
-      DIST_EXE_DEBUG: ${{ steps.info.outputs.DIST_EXE_DEBUG }}
-      DIST_EXE32: ${{ steps.info.outputs.DIST_EXE32 }}
-      DIST_EXE32_DEBUG: ${{ steps.info.outputs.DIST_EXE32_DEBUG }}
-      DIST_AMD64: ${{ steps.info.outputs.DIST_AMD64 }}
-      DIST_AMD64_DEB: ${{ steps.info.outputs.DIST_AMD64_DEB }}
-      DIST_ARMV7: ${{ steps.info.outputs.DIST_ARMV7 }}
-      DIST_ARMV7_DEB: ${{ steps.info.outputs.DIST_ARMV7_DEB }}
-      DIST_ARMV8: ${{ steps.info.outputs.DIST_ARMV8 }}
-      DIST_ARMV8_DEB: ${{ steps.info.outputs.DIST_ARMV8_DEB }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Debug version
-        run: |
-          export VERSION=`git rev-parse --short HEAD`
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Release version
-        if: github.event.inputs.release == 'true' && github.event.inputs.release != 'false' && !cancelled()
-        run: |
-          export VERSION=`python3 -c "exec(open('macast/__pkginfo__.py').read()); print(__version__)"`
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Version
-        id: info
-        env:
-          VERSION: ${{ env.VERSION }}
-        run: |
-          export STANDARD_VERSION=`python3 -c "exec(open('macast/__pkginfo__.py').read()); print(__version__)"`
-          echo "::set-output name=version::${VERSION}"
-          echo "::set-output name=standard_version::${STANDARD_VERSION}"
-          echo "::set-output name=DIST_DMG::SinaCast-MacOS-${VERSION}-IntelChip.dmg"
-          echo "::set-output name=DIST_DMG_ARM::SinaCast-MacOS-${VERSION}-AppleSilicon.dmg"
-          echo "::set-output name=DIST_EXE::SinaCast-Windows-${VERSION}-x64.exe"
-          echo "::set-output name=DIST_EXE_DEBUG::SinaCast-Windows-${VERSION}-x64-debug.exe"
-          echo "::set-output name=DIST_EXE32::SinaCast-Windows-${VERSION}-x86.exe"
-          echo "::set-output name=DIST_EXE32_DEBUG::SinaCast-Windows-${VERSION}-x86-debug.exe"
-          echo "::set-output name=DIST_AMD64::SinaCast-Linux-${VERSION}-amd64"
-          echo "::set-output name=DIST_AMD64_DEB::SinaCast-Linux-${VERSION}-amd64.deb"
-          echo "::set-output name=DIST_ARMV7::SinaCast-Linux-${VERSION}-armv7"
-          echo "::set-output name=DIST_ARMV7_DEB::SinaCast-Linux-${VERSION}-armv7.deb"
-          echo "::set-output name=DIST_ARMV8::SinaCast-Linux-${VERSION}-armv8"
-          echo "::set-output name=DIST_ARMV8_DEB::SinaCast-Linux-${VERSION}-armv8.deb"
-          echo $VERSION
-          echo $STANDARD_VERSION
-
-  release:
-    needs: [ build-macos-apple, version ]
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/download-artifact@v2
-        if: github.event.inputs.release == 'true' && github.event.inputs.release != 'false' && !cancelled()
 
       - name: Version
-        if: github.event.inputs.release == 'true' && github.event.inputs.release != 'false' && !cancelled()
         run: |
-          echo "VERSION=${{ needs.version.outputs.version }}" >> $GITHUB_ENV
-          echo "DIST_DMG=${{ needs.version.outputs.DIST_DMG }}" >> $GITHUB_ENV
-          echo "DIST_DMG_ARM=${{ needs.version.outputs.DIST_DMG_ARM }}" >> $GITHUB_ENV
-          echo "DIST_EXE=${{ needs.version.outputs.DIST_EXE }}" >> $GITHUB_ENV
-          echo "DIST_EXE_DEBUG=${{ needs.version.outputs.DIST_EXE_DEBUG }}" >> $GITHUB_ENV
-          echo "DIST_EXE32=${{ needs.version.outputs.DIST_EXE32 }}" >> $GITHUB_ENV
-          echo "DIST_EXE32_DEBUG=${{ needs.version.outputs.DIST_EXE32_DEBUG }}" >> $GITHUB_ENV
-          echo "DIST_AMD64=${{ needs.version.outputs.DIST_AMD64 }}" >> $GITHUB_ENV
-          echo "DIST_AMD64_DEB=${{ needs.version.outputs.DIST_AMD64_DEB }}" >> $GITHUB_ENV
-          echo "DIST_ARMV7=${{ needs.version.outputs.DIST_ARMV7 }}" >> $GITHUB_ENV
-          echo "DIST_ARMV7_DEB=${{ needs.version.outputs.DIST_ARMV7_DEB }}" >> $GITHUB_ENV
-          echo "DIST_ARMV8=${{ needs.version.outputs.DIST_ARMV8 }}" >> $GITHUB_ENV
-          echo "DIST_ARMV8_DEB=${{ needs.version.outputs.DIST_ARMV8_DEB }}" >> $GITHUB_ENV
+          ls -R
+          export VERSION=`cat macast/.version`
+          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+          echo "DIST_DMG=SinaCast-MacOS-v${VERSION}.dmg" >> $GITHUB_ENV
+          echo "DIST_EXE=SinaCast-Windows-v${VERSION}.exe" >> $GITHUB_ENV
+          echo "DIST_EXE_DEBUG=SinaCast-Windows-v${VERSION}-debug.exe" >> $GITHUB_ENV
+          echo "DIST_AMD64=SinaCast-Linux-v${VERSION}-amd64" >> $GITHUB_ENV
+          echo "DIST_AMD64_DEB=SinaCast-Linux-v${VERSION}-amd64.deb" >> $GITHUB_ENV
+          echo "DIST_ARMV7=SinaCast-Linux-v${VERSION}-armv7" >> $GITHUB_ENV
+          echo "DIST_ARMV7_DEB=SinaCast-Linux-v${VERSION}-armv7.deb" >> $GITHUB_ENV
           echo $GITHUB_ENV
 
       - name: Upload
-        if: github.event.inputs.release == 'true' && github.event.inputs.release != 'false' && !cancelled()
+        if: github.event.inputs.release == 'true' && github.event.inputs.release  != 'false' && !cancelled()
         uses: ncipollo/release-action@v1
         with:
           name: SinaCast ${{ env.VERSION }}
@@ -114,22 +57,53 @@ jobs:
           body: This release is built by github-action.
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-          artifacts: >
-            ${{ env.DIST_DMG }}/${{ env.DIST_DMG }},
-            ${{ env.DIST_DMG_ARM }}/${{ env.DIST_DMG_ARM }},
-            ${{ env.DIST_EXE }}/${{ env.DIST_EXE }},
-            ${{ env.DIST_EXE_DEBUG }}/${{ env.DIST_EXE_DEBUG }},
-            ${{ env.DIST_EXE32 }}/${{ env.DIST_EXE32 }},
-            ${{ env.DIST_EXE32_DEBUG }}/${{ env.DIST_EXE32_DEBUG }},
-            ${{ env.DIST_AMD64 }}/${{ env.DIST_AMD64 }},
-            ${{ env.DIST_AMD64_DEB }}/${{ env.DIST_AMD64_DEB }},
-            ${{ env.DIST_ARMV7 }}/${{ env.DIST_ARMV7 }},
-            ${{ env.DIST_ARMV7_DEB }}/${{ env.DIST_ARMV7_DEB }},
-            ${{ env.DIST_ARMV8 }}/${{ env.DIST_ARMV8 }},
-            ${{ env.DIST_ARMV8_DEB }}/${{ env.DIST_ARMV8_DEB }}
+          artifacts: ${{ env.DIST_DMG }}/${{ env.DIST_DMG }},${{ env.DIST_EXE }}/${{ env.DIST_EXE }},${{ env.DIST_EXE_DEBUG }}/${{ env.DIST_EXE_DEBUG }},${{ env.DIST_AMD64 }}/${{ env.DIST_AMD64 }},${{ env.DIST_AMD64_DEB }}/${{ env.DIST_AMD64_DEB }},${{ env.DIST_ARMV7_DEB }}/${{ env.DIST_ARMV7_DEB }}
 
-  build-macos-apple:
-    needs: [ version ]
+  build-nt:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Requirement
+        run: |
+          pip3 install -r requirements/common.txt
+          pip3 install pyinstaller
+          $client = new-object System.Net.WebClient
+          $client.DownloadFile('https://github.com/xfangfang/Macast/releases/download/v0.1/mpv-0.34.0-x86_64.7z','mpv.7z')
+          7z x -obin mpv.7z *.exe
+          $client.DownloadFile('https://github.com/xfangfang/Macast/releases/download/v0.1/gettext0.21-iconv1.16-static-64.zip','gettext.zip')
+          7z x -ogettext gettext.zip bin/msgfmt.exe
+
+      - name: Build
+        id: compile
+        run: |
+          Get-ChildItem i18n | ForEach-Object -Process{gettext/bin/msgfmt -o $_/LC_MESSAGES/macast.mo $_/LC_MESSAGES/macast.po;echo $_.name}
+          $VERSION=cat macast/.version
+          echo "DIST_EXE=SinaCast-Windows-v${VERSION}.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "DIST_EXE_DEBUG=SinaCast-Windows-v${VERSION}-debug.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "VERSION=v${VERSION}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          pyinstaller --noconfirm -F -w --additional-hooks-dir=. --add-data="macast/.version;." --add-data="macast/xml/*;macast/xml"  --add-data="i18n/zh_CN/LC_MESSAGES/*.mo;i18n/zh_CN/LC_MESSAGES" --add-data="macast/assets/*;macast/assets" --add-data="macast/assets/fonts/*;macast/assets/fonts" --add-binary="bin/mpv.exe;bin" --icon=macast/assets/icon.ico Sinacast.py
+          cp dist/Sinacast.exe Sinacast-Windows-v${VERSION}.exe
+          pyinstaller --noconfirm -F --additional-hooks-dir=. --add-data="macast/.version;." --add-data="macast/xml/*;macast/xml"  --add-data="i18n/zh_CN/LC_MESSAGES/*.mo;i18n/zh_CN/LC_MESSAGES" --add-data="macast/assets/*;macast/assets" --add-data="macast/assets/fonts/*;macast/assets/fonts" --add-binary="bin/mpv.exe;bin" --icon=macast/assets/icon.ico Sinacast.py
+          cp dist/Sinacast.exe Sinacast-Windows-v${VERSION}-debug.exe
+          echo "::set-output name=status::success"
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v2
+        if: steps.compile.outputs.status == 'success'
+        with:
+          name: ${{ env.DIST_EXE }}
+          path: ${{ env.DIST_EXE }}
+
+      - name: Upload dist debug
+        uses: actions/upload-artifact@v2
+        if: steps.compile.outputs.status == 'success'
+        with:
+          name: ${{ env.DIST_EXE_DEBUG }}
+          path: ${{ env.DIST_EXE_DEBUG }}
+
+  build-darwin:
     runs-on: macos-11
     steps:
       - name: Checkout
@@ -145,23 +119,22 @@ jobs:
 
       - name: Install Requirement
         run: |
-          pip3 install -r requirements.txt
+          pip3 install -r requirements/darwin.txt
           pip3 install py2app
-          wget https://github.com/xfangfang/Macast/releases/download/v0.1/mpv-0.34.1-darwin-arm.tar.gz
-          mkdir -p bin_arm && tar --strip-components 2 -C bin_arm -xzvf mpv-0.34.1-darwin-arm.tar.gz mpv.app/Contents/MacOS
-          wget https://github.com/xfangfang/Macast/releases/download/v0.1/macos_arm_lxml_netifaces.tar.gz
+          wget https://laboratory.stolendata.net/~djinn/mpv_osx/mpv-latest.tar.gz
+          mkdir -p bin && tar --strip-components 2 -C bin -xzvf mpv-latest.tar.gz mpv.app/Contents/MacOS
 
-      - name: Readme
+      - name: Build
+        id: compile
         run: |
-          mkdir -p dist
-          echo "SinaCast" > dist/readme.txt
-          echo "" >> dist/readme.txt
-          echo "if you see any of these after open this application:" >> dist/readme.txt
-          echo "1: SinaCast.app is damaged and can't be opened. You should move it to he Trash." >> dist/readme.txt
-          echo "2: SinaCast.app can't be opened because it is from an unidentified developer." >> dist/readme.txt
-          echo "" >> dist/readme.txt
-          echo "Please run this command in your terminal:" >> dist/readme.txt
-          echo "sudo xattr -rd com.apple.quarantine /Applications/SinaCast.app" >> dist/readme.txt
+          for file in i18n/*; do msgfmt -o $file/LC_MESSAGES/macast.mo $file/LC_MESSAGES/macast.po;echo $file;done
+          python3 setup_py2app.py py2app --arch=x86_64
+          cp -R bin dist/Sinacast.app/Contents/Resources/
+          export VERSION=`cat macast/.version`
+          echo "DIST_DMG=Sinacast-MacOS-v${VERSION}.dmg" >> $GITHUB_ENV
+          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+          create-dmg --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Sinacast.app" 200 190  --hide-extension "Sinacast.app" --app-drop-link 600 185  --volname "Sinacast-v${VERSION} Installer" Sinacast-MacOS-v${VERSION}.dmg "dist/"
+          echo "::set-output name=status::success"
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
@@ -170,23 +143,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-      - name: Build arm
-        id: compile_arm
-        env:
-          VERSION: ${{ needs.version.outputs.version }}
-          DIST_DMG_ARM: ${{ needs.version.outputs.DIST_DMG_ARM }}
-        run: |
-          echo $VERSION $DIST_DMG_ARM
-          python3 setup.py compile_catalog -f -D macast -d macast/i18n
-          python3 setup_py2app.py py2app --arch=arm64
-          cp -R bin_arm dist/SinaCast.app/Contents/Resources/bin
-          tar --strip-components 1 -C dist/SinaCast.app/Contents/Resources/lib/python3.9/lib-dynload -xzvf macos_arm_lxml_netifaces.tar.gz
-          create-dmg --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "SinaCast.app" 200 190  --icon "readme.txt" 400 100 --hide-extension "SinaCast.app" --app-drop-link 600 185  --volname "SinaCast-v${VERSION} Installer" ${DIST_DMG_ARM} "dist/"
-          echo "::set-output name=status::success"
-
-      - name: Upload dist arm
+      - name: Upload dist
         uses: actions/upload-artifact@v2
-        if: steps.compile_arm.outputs.status == 'success'
+        if: steps.compile.outputs.status == 'success'
         with:
-          name: ${{ needs.version.outputs.DIST_DMG_ARM }}
-          path: ${{ needs.version.outputs.DIST_DMG_ARM }}
+          name: ${{ env.DIST_DMG }}
+          path: ${{ env.DIST_DMG }}
