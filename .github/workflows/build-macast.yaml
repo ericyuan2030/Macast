@@ -1,7 +1,7 @@
 # Copyright (c) 2021 by xfangfang. All Rights Reserved.
 
 
-name: Build Macast
+name: Build SinaCast
 
 on:
   push:
@@ -108,7 +108,7 @@ jobs:
         if: github.event.inputs.release == 'true' && github.event.inputs.release != 'false' && !cancelled()
         uses: ncipollo/release-action@v1
         with:
-          name: Macast ${{ env.VERSION }}
+          name: SinaCast ${{ env.VERSION }}
           tag: ${{ env.VERSION }}
           omitBodyDuringUpdate: true
           body: This release is built by github-action.
@@ -154,14 +154,14 @@ jobs:
       - name: Readme
         run: |
           mkdir -p dist
-          echo "Macast" > dist/readme.txt
+          echo "SinaCast" > dist/readme.txt
           echo "" >> dist/readme.txt
           echo "if you see any of these after open this application:" >> dist/readme.txt
-          echo "1: Macast.app is damaged and can't be opened. You should move it to he Trash." >> dist/readme.txt
-          echo "2: Macast.app can't be opened because it is from an unidentified developer." >> dist/readme.txt
+          echo "1: SinaCast.app is damaged and can't be opened. You should move it to he Trash." >> dist/readme.txt
+          echo "2: SinaCast.app can't be opened because it is from an unidentified developer." >> dist/readme.txt
           echo "" >> dist/readme.txt
           echo "Please run this command in your terminal:" >> dist/readme.txt
-          echo "sudo xattr -rd com.apple.quarantine /Applications/Macast.app" >> dist/readme.txt
+          echo "sudo xattr -rd com.apple.quarantine /Applications/SinaCast.app" >> dist/readme.txt
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
@@ -179,9 +179,9 @@ jobs:
           echo $VERSION $DIST_DMG_ARM
           python3 setup.py compile_catalog -f -D macast -d macast/i18n
           python3 setup_py2app.py py2app --arch=arm64
-          cp -R bin_arm dist/Macast.app/Contents/Resources/bin
-          tar --strip-components 1 -C dist/Macast.app/Contents/Resources/lib/python3.9/lib-dynload -xzvf macos_arm_lxml_netifaces.tar.gz
-          create-dmg --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Macast.app" 200 190  --icon "readme.txt" 400 100 --hide-extension "Macast.app" --app-drop-link 600 185  --volname "Macast-v${VERSION} Installer" ${DIST_DMG_ARM} "dist/"
+          cp -R bin_arm dist/SinaCast.app/Contents/Resources/bin
+          tar --strip-components 1 -C dist/SinaCast.app/Contents/Resources/lib/python3.9/lib-dynload -xzvf macos_arm_lxml_netifaces.tar.gz
+          create-dmg --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "SinaCast.app" 200 190  --icon "readme.txt" 400 100 --hide-extension "SinaCast.app" --app-drop-link 600 185  --volname "SinaCast-v${VERSION} Installer" ${DIST_DMG_ARM} "dist/"
           echo "::set-output name=status::success"
 
       - name: Upload dist arm
