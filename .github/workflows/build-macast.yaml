@@ -6,7 +6,7 @@ name: Build Sinacast
 on:
   push:
     branches:
-      - dev_test
+      - main
   pull_request:
   workflow_dispatch:
     inputs:
