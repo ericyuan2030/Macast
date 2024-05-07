@@ -27,6 +27,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
+      # 这个是用于串联不同的step的，有点类似环境变量的东西
       version: ${{ steps.info.outputs.version }}
       standard_version: ${{ steps.info.outputs.standard_version }}
       DIST_DMG: ${{ steps.info.outputs.DIST_DMG }}
