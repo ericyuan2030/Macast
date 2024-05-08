@@ -20,6 +20,7 @@ OPTIONS = {
         'NSHighResolutionCapable': True,
         'LSMinimumSystemVersion': '10.12.0',
         'CFBundleIdentifier': 'com.sina.Sinacast',
+        'CFBundleName': 'Sinacast',
         'NSHumanReadableCopyright': copyright,
         'CFBundleShortVersionString': __version__,
         'CFBundleVersion': __version__,
