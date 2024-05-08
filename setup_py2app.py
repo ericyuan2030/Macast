@@ -9,7 +9,7 @@ import os
 import datetime
 from setuptools import setup
 
-APP = ['Sinacast.py']
+APP = ['Macast.py']
 DATA_FILES = []
 exec(open('macast/__pkginfo__.py').read())
 copyright = 'Copyright {} sina and the SinaCast contributors.'.format(datetime.datetime.now().year)
