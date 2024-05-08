@@ -159,7 +159,7 @@ jobs:
           $BUILD_HIDDEN_IMPORT=("--hidden-import=win32process","--hidden-import=win32gui")
           $BUILD_OTHERS=("--additional-hooks-dir=.","--icon=macast\assets\icon.ico","--runtime-tmpdir=%Temp%\Macast", "--upx-exclude=mpv.exe")
           $BUILD_COMMON=($BUILD_LANG+$BUILD_ASSETS_1+$BUILD_ASSETS_2+$BUILD_HIDDEN_IMPORT+$BUILD_OTHERS)
-          pyinstaller --noconfirm -F -w  $BUILD_COMMON --splash=macast\assets\icon.jpg --name Sinacast Macast.py
+          pyinstaller --noconfirm -F -w  $BUILD_COMMON --splash=macast\assets\icon.png --name Sinacast Macast.py
           cp dist\Sinacast.exe $DIST_EXE
           pyinstaller --noconfirm -F -d=all $BUILD_COMMON Macast.py
           cp dist\Sinacast.exe $DIST_EXE_DEBUG
