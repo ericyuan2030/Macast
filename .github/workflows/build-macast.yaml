@@ -161,7 +161,7 @@ jobs:
           $BUILD_COMMON=($BUILD_LANG+$BUILD_ASSETS_1+$BUILD_ASSETS_2+$BUILD_HIDDEN_IMPORT+$BUILD_OTHERS)
           pyinstaller --noconfirm -F -w  $BUILD_COMMON --splash=macast\assets\icon.png --name Sinacast Macast.py
           cp dist\Sinacast.exe $DIST_EXE
-          pyinstaller --noconfirm -F -d=all $BUILD_COMMON Macast.py
+          pyinstaller --noconfirm -F -d=all $BUILD_COMMON  --name Sinacast Macast.py
           cp dist\Sinacast.exe $DIST_EXE_DEBUG
           echo "::set-output name=status::success"
 
